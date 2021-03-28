@@ -33,10 +33,8 @@ class BlurActivity : AppCompatActivity() {
         binding = ActivityBlurBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Get the ViewModel
         viewModel = ViewModelProviders.of(this).get(BlurViewModel::class.java)
 
-        // Image uri should be stored in the ViewModel; put it there then display
         val imageUriExtra = intent.getStringExtra(KEY_IMAGE_URI)
         viewModel.setImageUri(imageUriExtra)
         viewModel.imageUri?.let { imageUri ->
@@ -46,9 +44,6 @@ class BlurActivity : AppCompatActivity() {
         binding.goButton.setOnClickListener { viewModel.applyBlur(blurLevel) }
     }
 
-    /**
-     * Shows and hides views for when the Activity is processing an image
-     */
     private fun showWorkInProgress() {
         with(binding) {
             progressBar.visibility = View.VISIBLE
@@ -58,9 +53,6 @@ class BlurActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Shows and hides views for when the Activity is done processing an image
-     */
     private fun showWorkFinished() {
         with(binding) {
             progressBar.visibility = View.GONE

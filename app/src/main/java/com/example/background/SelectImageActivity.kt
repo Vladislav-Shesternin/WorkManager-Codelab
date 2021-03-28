@@ -56,10 +56,8 @@ class SelectImageActivity : AppCompatActivity() {
             permissionRequestCount = it.getInt(KEY_PERMISSIONS_REQUEST_COUNT, 0)
         }
 
-        // Make sure the app has correct permissions to run
         requestPermissionsIfNecessary()
 
-        // Create request to get image from filesystem when button clicked
         binding.selectImage.setOnClickListener {
             val chooseIntent = Intent(
                     Intent.ACTION_PICK,
@@ -69,18 +67,11 @@ class SelectImageActivity : AppCompatActivity() {
         }
     }
 
-    /** Save the permission request count on a rotate  */
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(KEY_PERMISSIONS_REQUEST_COUNT, permissionRequestCount)
     }
 
-    /**
-     * Request permissions twice - if the user denies twice then show a toast about how to update
-     * the permission for storage. Also disable the button if we don't have access to pictures on
-     * the device.
-     */
     private fun requestPermissionsIfNecessary() {
         if (!checkAllPermissions()) {
             if (permissionRequestCount < MAX_NUMBER_REQUEST_PERMISSIONS) {
@@ -141,7 +132,6 @@ class SelectImageActivity : AppCompatActivity() {
     }
 
     private fun handleImageRequestResult(intent: Intent) {
-        // If clipdata is available, we use it, otherwise we use data
         val imageUri: Uri? = intent.clipData?.let {
             it.getItemAt(0).uri
         } ?: intent.data
