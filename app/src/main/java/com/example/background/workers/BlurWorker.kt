@@ -22,6 +22,8 @@ class BlurWorker(
 
         makeStatusNotification("Blurring image", appContext)
 
+        sleep()
+
         return try {
 
             if(TextUtils.isEmpty(resourceUri)){
