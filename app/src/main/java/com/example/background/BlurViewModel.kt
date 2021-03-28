@@ -32,11 +32,8 @@ class BlurViewModel(application: Application) : AndroidViewModel(application) {
 
     private val workManager = WorkManager.getInstance(application)
 
-    internal val outputWorkInfo: LiveData<List<WorkInfo>>
-
-    init {
-        outputWorkInfo = workManager.getWorkInfosByTagLiveData(TAG_OUTPUT)
-    }
+    internal val outputWorkInfo: LiveData<List<WorkInfo>> =
+            workManager.getWorkInfosByTagLiveData(TAG_OUTPUT)
 
     internal fun applyBlur(blurLevel: Int) {
         var continuation = workManager.beginUniqueWork(
@@ -45,9 +42,9 @@ class BlurViewModel(application: Application) : AndroidViewModel(application) {
                 OneTimeWorkRequest.from(CleanupWorker::class.java)
         )
 
-        for(i in 0 until blurLevel){
+        for (i in 0 until blurLevel) {
             val blurBuilder = OneTimeWorkRequestBuilder<BlurWorker>()
-            if(i == 0){
+            if (i == 0) {
                 blurBuilder.setInputData(createInputDataForUri())
             }
             continuation = continuation.then(blurBuilder.build())
@@ -69,19 +66,23 @@ class BlurViewModel(application: Application) : AndroidViewModel(application) {
         return builder.build()
     }
 
-    private fun uriOrNull(uriString: String?): Uri? {
-        return if (!uriString.isNullOrEmpty()) {
-            Uri.parse(uriString)
-        } else {
-            null
-        }
-    }
-
     internal fun setImageUri(uri: String?) {
         imageUri = uriOrNull(uri)
     }
 
     internal fun setOutputUri(outputImageUri: String?) {
         outputUri = uriOrNull(outputImageUri)
+    }
+
+    internal fun cancelWork(){
+        workManager.cancelUniqueWork(IMAGE_MANIPULATION_WORK_NAME)
+    }
+
+    private fun uriOrNull(uriString: String?): Uri? {
+        return if (!uriString.isNullOrEmpty()) {
+            Uri.parse(uriString)
+        } else {
+            null
+        }
     }
 }
